@@ -1,0 +1,7 @@
+# this is a comment
+(( )){} # grouping stuff
+!*+-/=<> <= == # operators
+
+fun main()  {
+    print "hello world!";
+}
