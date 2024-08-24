@@ -16,3 +16,9 @@ An interpreter of the Koda programming language written in Java
 > When we take the lexeme and bundle it together with that other data, the result is a <b>token</b>.
 >
 > <cite>Robert Nystrom on [Crafting Interpreters](https://www.craftinginterpreters.com/scanning.html)</cite>
+
+## Syntatic grammars
+> In the syntactic grammar we’re talking about now, we’re at a different level of granularity.
+> Now each “letter” in the alphabet is an entire token and a “string” is a sequence of tokens — an entire expression. 
+>
+> <cite>Robert Nystrom on [Crafting Interpreters](https://www.craftinginterpreters.com/representing-code.html)</cite>
