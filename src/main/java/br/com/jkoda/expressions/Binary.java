@@ -7,4 +7,8 @@ public record Binary(
         Token operator,
         Expression right
 ) implements Expression {
+    @Override
+    public <R> R accept(ExpressionVisitor<R> visitor) {
+        return visitor.visit(this);
+    }
 }
