@@ -1,5 +1,7 @@
 package br.com.jkoda;
 
+import br.com.jkoda.expressions.Expression;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -45,11 +47,21 @@ public class jKoda {
     private static void run(String source) {
         Scanner scanner = new Scanner(source);
         List<Token> tokens = scanner.scanTokens();
+        Parser parser = new Parser(tokens);
+        Expression expression = parser.parse();
 
-        // For now, just print the tokens.
-        for (Token token : tokens) {
-            System.out.println(token);
+        // Stop if there was a syntax error.
+        if (hadError) return;
+
+        System.out.println(new AbstractSyntaxTreePrinter().print(expression));
+    }
+
+    static void error(Token token, String message) {
+        if (token.type() == TokenType.EOF) {
+            report(token.line(), " at end", message);
         }
+
+        report(token.line(), " at '" + token.lexeme() + "'", message);
     }
 
     static void error(int line, String message) {

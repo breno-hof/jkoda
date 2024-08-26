@@ -22,3 +22,15 @@ An interpreter of the Koda programming language written in Java
 > Now each “letter” in the alphabet is an entire token and a “string” is a sequence of tokens — an entire expression. 
 >
 > <cite>Robert Nystrom on [Crafting Interpreters](https://www.craftinginterpreters.com/representing-code.html)</cite>
+
+
+## Parsing Expressions
+>  The only remaining piece is parsing—transmogrifying a sequence of tokens into one of those syntax trees.
+>
+> <cite>Robert Nystrom on [Crafting Interpreters](https://www.craftinginterpreters.com/parsing-expressions.html)</cite>
+
+### Recursive descent
+> Recursive descent is considered a top-down parser because it starts from the top or outermost grammar rule (here expression) and works its way down into the nested subexpressions before finally reaching the leaves of the syntax tree.
+>
+> <cite>Robert Nystrom on [Crafting Interpreters](https://www.craftinginterpreters.com/parsing-expressions.html#recursive-descent-parsing)</cite>
+
