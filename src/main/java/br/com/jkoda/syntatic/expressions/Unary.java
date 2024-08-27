@@ -1,6 +1,6 @@
-package br.com.jkoda.expressions;
+package br.com.jkoda.syntatic.expressions;
 
-import br.com.jkoda.Token;
+import br.com.jkoda.lexical.Token;
 
 public record Unary(
         Token operator,

@@ -1,4 +1,4 @@
-package br.com.jkoda.expressions;
+package br.com.jkoda.syntatic.expressions;
 
 public interface ExpressionVisitor<R> {
     R visit(Binary binary);

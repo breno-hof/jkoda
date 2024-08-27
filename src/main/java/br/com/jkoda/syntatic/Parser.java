@@ -1,11 +1,15 @@
-package br.com.jkoda;
+package br.com.jkoda.syntatic;
 
-import br.com.jkoda.expressions.*;
+import br.com.jkoda.jKoda;
+import br.com.jkoda.lexical.Token;
+import br.com.jkoda.syntatic.expressions.*;
 
 import java.util.List;
 import java.util.function.Supplier;
 
-import static br.com.jkoda.TokenType.*;
+import static br.com.jkoda.lexical.TokenType.*;
+import br.com.jkoda.lexical.TokenType;
+
 
 public class Parser {
     private final List<Token> tokens;

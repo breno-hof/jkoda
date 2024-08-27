@@ -1,4 +1,4 @@
-package br.com.jkoda.expressions;
+package br.com.jkoda.syntatic.expressions;
 
 public record Literal(Object value) implements Expression {
     @Override

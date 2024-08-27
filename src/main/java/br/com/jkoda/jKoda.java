@@ -1,6 +1,11 @@
 package br.com.jkoda;
 
-import br.com.jkoda.expressions.Expression;
+import br.com.jkoda.lexical.Scanner;
+import br.com.jkoda.lexical.Token;
+import br.com.jkoda.lexical.TokenType;
+import br.com.jkoda.syntatic.AbstractSyntaxTreePrinter;
+import br.com.jkoda.syntatic.Parser;
+import br.com.jkoda.syntatic.expressions.Expression;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -56,7 +61,7 @@ public class jKoda {
         System.out.println(new AbstractSyntaxTreePrinter().print(expression));
     }
 
-    static void error(Token token, String message) {
+    public static void error(Token token, String message) {
         if (token.type() == TokenType.EOF) {
             report(token.line(), " at end", message);
         }
@@ -64,7 +69,7 @@ public class jKoda {
         report(token.line(), " at '" + token.lexeme() + "'", message);
     }
 
-    static void error(int line, String message) {
+    public static void error(int line, String message) {
         report(line, "", message);
     }
 
