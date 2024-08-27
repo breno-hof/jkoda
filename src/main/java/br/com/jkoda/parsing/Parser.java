@@ -1,14 +1,14 @@
-package br.com.jkoda.syntatic;
+package br.com.jkoda.parsing;
 
 import br.com.jkoda.jKoda;
-import br.com.jkoda.lexical.Token;
-import br.com.jkoda.syntatic.expressions.*;
+import br.com.jkoda.scanning.Token;
+import br.com.jkoda.parsing.expressions.*;
 
 import java.util.List;
 import java.util.function.Supplier;
 
-import static br.com.jkoda.lexical.TokenType.*;
-import br.com.jkoda.lexical.TokenType;
+import static br.com.jkoda.scanning.TokenType.*;
+import br.com.jkoda.scanning.TokenType;
 
 
 public class Parser {

@@ -1,4 +1,4 @@
-package br.com.jkoda.lexical;
+package br.com.jkoda.scanning;
 
 import br.com.jkoda.jKoda;
 
@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static br.com.jkoda.lexical.TokenType.*;
+import static br.com.jkoda.scanning.TokenType.*;
 
 public class Scanner {
     private final String source;

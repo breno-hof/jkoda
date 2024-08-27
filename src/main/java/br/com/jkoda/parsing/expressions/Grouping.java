@@ -1,4 +1,4 @@
-package br.com.jkoda.syntatic.expressions;
+package br.com.jkoda.parsing.expressions;
 
 public record Grouping(Expression expression) implements Expression {
     @Override

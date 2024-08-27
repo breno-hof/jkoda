@@ -1,4 +1,4 @@
-package br.com.jkoda.syntatic;
+package br.com.jkoda.parsing;
 
 public class ParseError extends RuntimeException {
 }

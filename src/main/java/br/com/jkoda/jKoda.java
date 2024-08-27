@@ -1,11 +1,13 @@
 package br.com.jkoda;
 
-import br.com.jkoda.lexical.Scanner;
-import br.com.jkoda.lexical.Token;
-import br.com.jkoda.lexical.TokenType;
-import br.com.jkoda.syntatic.AbstractSyntaxTreePrinter;
-import br.com.jkoda.syntatic.Parser;
-import br.com.jkoda.syntatic.expressions.Expression;
+import br.com.jkoda.evaluating.Interpreter;
+import br.com.jkoda.evaluating.RuntimeError;
+import br.com.jkoda.scanning.Scanner;
+import br.com.jkoda.scanning.Token;
+import br.com.jkoda.scanning.TokenType;
+import br.com.jkoda.parsing.AbstractSyntaxTreePrinter;
+import br.com.jkoda.parsing.Parser;
+import br.com.jkoda.parsing.expressions.Expression;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,7 +18,9 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class jKoda {
-    private static boolean hadError;
+    private static boolean hadError = false;
+    private static boolean hadRuntimeError = false;
+    private static final Interpreter interpreter = new Interpreter();
 
     public static void main(String[] args) throws IOException {
         if (args.length > 1) {
@@ -34,6 +38,7 @@ public class jKoda {
         run(new String(bytes, Charset.defaultCharset()));
 
         if (hadError) System.exit(65);
+        if (hadRuntimeError) System.exit(70);
     }
 
     private static void runPrompt() throws IOException {
@@ -59,6 +64,8 @@ public class jKoda {
         if (hadError) return;
 
         System.out.println(new AbstractSyntaxTreePrinter().print(expression));
+
+        interpreter.interpret(expression);
     }
 
     public static void error(Token token, String message) {
@@ -71,6 +78,11 @@ public class jKoda {
 
     public static void error(int line, String message) {
         report(line, "", message);
+    }
+
+    public static void runtimeError(RuntimeError error) {
+        System.err.println("[line " + error.getOperator().line() + "]" + error.getMessage());
+        hadRuntimeError = true;
     }
 
     private static void report(int line, String where, String message) {

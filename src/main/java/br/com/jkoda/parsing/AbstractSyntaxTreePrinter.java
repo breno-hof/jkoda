@@ -1,6 +1,6 @@
-package br.com.jkoda.syntatic;
+package br.com.jkoda.parsing;
 
-import br.com.jkoda.syntatic.expressions.*;
+import br.com.jkoda.parsing.expressions.*;
 
 import java.util.Objects;
 

@@ -1,4 +1,4 @@
-package br.com.jkoda.lexical;
+package br.com.jkoda.scanning;
 
 public record Token(
         TokenType type,
