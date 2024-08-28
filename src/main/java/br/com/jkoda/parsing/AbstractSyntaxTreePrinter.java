@@ -42,4 +42,15 @@ public class AbstractSyntaxTreePrinter implements ExpressionVisitor<String> {
     public String visit(Unary unary) {
         return parenthesize(unary.operator().lexeme(), unary.right());
     }
+
+    @Override
+    public String visit(Variable variable) {
+        var value = Objects.isNull(variable.name().literal()) ? "nil" : variable.name().literal().toString();
+        return "var (" + variable.name().lexeme() + value + ")";
+    }
+
+    @Override
+    public String visit(Assignment assignment) {
+        return parenthesize("= " + assignment.name().lexeme(), assignment.value());
+    }
 }

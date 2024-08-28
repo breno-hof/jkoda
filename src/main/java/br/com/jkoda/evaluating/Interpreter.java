@@ -1,20 +1,44 @@
 package br.com.jkoda.evaluating;
 
 import br.com.jkoda.jKoda;
-import br.com.jkoda.scanning.Token;
 import br.com.jkoda.parsing.expressions.*;
+import br.com.jkoda.parsing.statement.*;
+import br.com.jkoda.scanning.Token;
 
+import java.util.List;
 import java.util.function.Supplier;
 
-public class Interpreter implements ExpressionVisitor<Object> {
+public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor {
+    private Environment environment = new Environment();
 
-    public void interpret(Expression expression) {
+    public void interpret(List<Statement> statements) {
         try {
-            Object value = evaluate(expression);
-            System.out.println(stringify(value));
+            for (Statement statement : statements) {
+                execute(statement);
+            }
         } catch (RuntimeError error) {
             jKoda.runtimeError(error);
         }
+    }
+
+    @Override
+    public void visit(Print print) {
+        System.out.println(stringify(evaluate(print.expression())));
+    }
+
+    @Override
+    public void visit(Formula formula) {
+        evaluate(formula.expression());
+    }
+
+    @Override
+    public void visit(Var var) {
+        Object value = null;
+        if (var.initializer() != null) {
+            value = evaluate(var.initializer());
+        }
+
+        environment.define(var.name().lexeme(), value);
     }
 
     @Override
@@ -61,6 +85,16 @@ public class Interpreter implements ExpressionVisitor<Object> {
         };
     }
 
+    @Override
+    public Object visit(Variable variable) {
+        return environment.get(variable.name());
+    }
+
+    @Override
+    public Object visit(Assignment assignment) {
+        return null;
+    }
+
     private Object doBinaryOperationWithCheck(Binary binary, Object left, Object right, Supplier<Object> operation) {
         checkNumberOperands(binary.operator(), left, right);
         return operation.get();
@@ -91,6 +125,10 @@ public class Interpreter implements ExpressionVisitor<Object> {
 
     private Object evaluate(Expression expression) {
         return expression.accept(this);
+    }
+
+    private void execute(Statement statement) {
+        statement.accept(this);
     }
 
     private boolean isEqual(Object a, Object b) {

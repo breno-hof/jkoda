@@ -1,34 +1,45 @@
 package br.com.jkoda.parsing;
 
 import br.com.jkoda.jKoda;
-import br.com.jkoda.scanning.Token;
 import br.com.jkoda.parsing.expressions.*;
+import br.com.jkoda.parsing.statement.Formula;
+import br.com.jkoda.parsing.statement.Print;
+import br.com.jkoda.parsing.statement.Statement;
+import br.com.jkoda.parsing.statement.Var;
+import br.com.jkoda.scanning.Token;
+import br.com.jkoda.scanning.TokenType;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
 import static br.com.jkoda.scanning.TokenType.*;
-import br.com.jkoda.scanning.TokenType;
 
 
 public class Parser {
     private final List<Token> tokens;
     private int current = 0;
 
-    public Parser(List<Token> tokens) {
-        this.tokens = tokens;
-    }
-
-    public Expression parse() {
-        try {
-            return expression();
-        } catch (ParseError error) {
-            return null;
-        }
-    }
-
     private Expression expression() {
-        return equality();
+        return assignment();
+    }
+
+    private Expression assignment() {
+        Expression expression = equality();
+
+        if (match(EQUAL)) {
+            Token equals = previous();
+            Expression value = assignment();
+
+            if (expression instanceof Variable) {
+                Token name = ((Variable)expression).name();
+                return new Assignment(name, value);
+            }
+
+            jKoda.error(equals, "Invalid assignment target.");
+        }
+
+        return expression;
     }
 
     private Expression equality() {
@@ -37,6 +48,60 @@ public class Parser {
 
     private Expression comparison() {
         return handleBinaryOperatorRule(this::term, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL);
+    }
+
+    public Parser(List<Token> tokens) {
+        this.tokens = tokens;
+    }
+
+    public List<Statement> parse() {
+        var statements = new ArrayList<Statement>();
+        while(!isAtEnd()) {
+            statements.add(declaration());
+        }
+
+        return statements;
+    }
+
+    private Statement declaration() {
+        try {
+            if (match(VAR)) return variable();
+
+            return statement();
+        } catch (ParseError error) {
+            synchronize();
+            return null;
+        }
+    }
+
+    private Statement variable() {
+        Token name = consume(IDENTIFIER, "Expect variable name.");
+
+        Expression initializer = null;
+        if (match(EQUAL)) {
+            initializer = expression();
+        }
+
+        consume(SEMICOLON, "Expect ';' after variable declaration.");
+        return new Var(name, initializer);
+    }
+
+    private Statement statement() {
+        if (match(PRINT)) return print();
+
+        return formula();
+    }
+
+    private Statement print() {
+        Expression expression = expression();
+        consume(SEMICOLON, "Expect ';' after value.");
+        return new Print(expression);
+    }
+
+    private Statement formula() {
+        Expression expression = expression();
+        consume(SEMICOLON, "Expect ';' after expression.");
+        return new Formula(expression);
     }
 
     private Expression term() {
@@ -64,6 +129,10 @@ public class Parser {
 
         if (match(NUMBER, STRING)) {
             return new Literal(previous().literal());
+        }
+
+        if (match(IDENTIFIER)) {
+            return new Variable(previous());
         }
 
         if (match(LEFT_PAREN)) {

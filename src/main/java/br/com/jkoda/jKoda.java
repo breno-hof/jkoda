@@ -2,6 +2,7 @@ package br.com.jkoda;
 
 import br.com.jkoda.evaluating.Interpreter;
 import br.com.jkoda.evaluating.RuntimeError;
+import br.com.jkoda.parsing.statement.Statement;
 import br.com.jkoda.scanning.Scanner;
 import br.com.jkoda.scanning.Token;
 import br.com.jkoda.scanning.TokenType;
@@ -58,14 +59,12 @@ public class jKoda {
         Scanner scanner = new Scanner(source);
         List<Token> tokens = scanner.scanTokens();
         Parser parser = new Parser(tokens);
-        Expression expression = parser.parse();
+        List<Statement> statements = parser.parse();
 
         // Stop if there was a syntax error.
         if (hadError) return;
 
-        System.out.println(new AbstractSyntaxTreePrinter().print(expression));
-
-        interpreter.interpret(expression);
+        interpreter.interpret(statements);
     }
 
     public static void error(Token token, String message) {
