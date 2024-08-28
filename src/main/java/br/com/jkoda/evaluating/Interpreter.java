@@ -92,7 +92,7 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor 
 
     @Override
     public Object visit(Assignment assignment) {
-        return null;
+        return environment.assign(assignment.name(), evaluate(assignment.value()));
     }
 
     private Object doBinaryOperationWithCheck(Binary binary, Object left, Object right, Supplier<Object> operation) {
