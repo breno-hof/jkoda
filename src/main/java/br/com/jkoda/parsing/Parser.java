@@ -2,10 +2,7 @@ package br.com.jkoda.parsing;
 
 import br.com.jkoda.jKoda;
 import br.com.jkoda.parsing.expressions.*;
-import br.com.jkoda.parsing.statement.Formula;
-import br.com.jkoda.parsing.statement.Print;
-import br.com.jkoda.parsing.statement.Statement;
-import br.com.jkoda.parsing.statement.Var;
+import br.com.jkoda.parsing.statement.*;
 import br.com.jkoda.scanning.Token;
 import br.com.jkoda.scanning.TokenType;
 
@@ -88,8 +85,20 @@ public class Parser {
 
     private Statement statement() {
         if (match(PRINT)) return print();
+        if (match(LEFT_BRACE)) return new Block(block());
 
         return formula();
+    }
+
+    private List<Statement> block() {
+        List<Statement> statements = new ArrayList<>();
+
+        while (!check(RIGHT_BRACE) && !isAtEnd()) {
+            statements.add(declaration());
+        }
+
+        consume(RIGHT_BRACE, "Expect '}' after block.");
+        return statements;
     }
 
     private Statement print() {

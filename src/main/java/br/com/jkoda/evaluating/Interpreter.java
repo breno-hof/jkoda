@@ -42,6 +42,11 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor 
     }
 
     @Override
+    public void visit(Block block) {
+        executeBlock(block.statements(), new Environment(environment));
+    }
+
+    @Override
     public Object visit(Binary binary) {
         Object right = evaluate(binary.right());
         Object left = evaluate(binary.left());
@@ -93,6 +98,20 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor 
     @Override
     public Object visit(Assignment assignment) {
         return environment.assign(assignment.name(), evaluate(assignment.value()));
+    }
+
+    private void executeBlock(List<Statement> statements, Environment environment) {
+        Environment previous = this.environment;
+
+        try {
+            this.environment = environment;
+
+            for (Statement statement : statements) {
+                execute(statement);
+            }
+        } finally {
+            this.environment = previous;
+        }
     }
 
     private Object doBinaryOperationWithCheck(Binary binary, Object left, Object right, Supplier<Object> operation) {
