@@ -7,4 +7,5 @@ public interface ExpressionVisitor<R> {
     R visit(Unary unary);
     R visit(Variable variable);
     R visit(Assignment assignment);
+    R visit(Logical logical);
 }

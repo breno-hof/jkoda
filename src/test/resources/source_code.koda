@@ -1,7 +1,23 @@
 # this is a comment
-(( )){} # grouping stuff
-!*+-/=<> <= == # operators
+# (( )){} # grouping stuff
+# !*+-/=<> <= == # operators
 
-fun main()  {
-    print "hello world!";
+var helloWorld = "Olá mundo!";
+var byeWorld = "Tchau mundo!";
+var counter = 0;
+var line = 0;
+
+while(counter <= 3 and line <= 2) {
+    print helloWorld;
+    print line;
+    print counter;
+
+    counter = counter + 1;
+
+    if (counter == 3) {
+        counter = 0;
+        line = line + 1;
+    }
 }
+
+print byeWorld;

@@ -5,4 +5,6 @@ public interface StatementVisitor {
     void visit(Formula formula);
     void visit(Var var);
     void visit(Block block);
+    void visit(If anIf);
+    void visit(While aWhile);
 }

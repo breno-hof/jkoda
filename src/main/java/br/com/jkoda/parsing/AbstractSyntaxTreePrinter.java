@@ -53,4 +53,9 @@ public class AbstractSyntaxTreePrinter implements ExpressionVisitor<String> {
     public String visit(Assignment assignment) {
         return parenthesize("= " + assignment.name().lexeme(), assignment.value());
     }
+
+    @Override
+    public String visit(Logical logical) {
+        return "";
+    }
 }

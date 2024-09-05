@@ -17,36 +17,6 @@ public class Parser {
     private final List<Token> tokens;
     private int current = 0;
 
-    private Expression expression() {
-        return assignment();
-    }
-
-    private Expression assignment() {
-        Expression expression = equality();
-
-        if (match(EQUAL)) {
-            Token equals = previous();
-            Expression value = assignment();
-
-            if (expression instanceof Variable) {
-                Token name = ((Variable)expression).name();
-                return new Assignment(name, value);
-            }
-
-            jKoda.error(equals, "Invalid assignment target.");
-        }
-
-        return expression;
-    }
-
-    private Expression equality() {
-        return handleBinaryOperatorRule(this::comparison, BANG_EQUAL, EQUAL_EQUAL);
-    }
-
-    private Expression comparison() {
-        return handleBinaryOperatorRule(this::term, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL);
-    }
-
     public Parser(List<Token> tokens) {
         this.tokens = tokens;
     }
@@ -84,10 +54,49 @@ public class Parser {
     }
 
     private Statement statement() {
+        if (match(FOR)) return aFor();
+        if (match(IF)) return anIf();
         if (match(PRINT)) return print();
+        if (match(WHILE)) return aWhile();
         if (match(LEFT_BRACE)) return new Block(block());
 
         return formula();
+    }
+
+    private Statement aFor() {
+        consume(LEFT_PAREN, "Expect '(' after 'for'.");
+
+        Statement initializer;
+        if (match(SEMICOLON)) {
+            initializer = null;
+        } else if (match(VAR)) {
+            initializer = variable();
+        } else {
+            initializer = formula();
+        }
+
+        Expression condition = null;
+        if (!check(SEMICOLON)) {
+            condition = expression();
+        }
+        consume(SEMICOLON, "Expect ';' after loop condition.");
+
+        Expression increment = null;
+        if (!check(RIGHT_PAREN)) {
+            increment = expression();
+        }
+        consume(RIGHT_PAREN, "Expect ')' after for clauses.");
+
+        return statement();
+    }
+
+    private Statement aWhile() {
+        consume(LEFT_PAREN, "Expect '(' after 'while'.");
+        Expression condition = expression();
+        consume(RIGHT_PAREN, "Expect ')' after condition.");
+        Statement body = statement();
+
+        return new While(condition, body);
     }
 
     private List<Statement> block() {
@@ -111,6 +120,58 @@ public class Parser {
         Expression expression = expression();
         consume(SEMICOLON, "Expect ';' after expression.");
         return new Formula(expression);
+    }
+
+    private Expression expression() {
+        return assignment();
+    }
+
+    private Expression assignment() {
+        Expression expression = or();
+
+        if (match(EQUAL)) {
+            Token equals = previous();
+            Expression value = assignment();
+
+            if (expression instanceof Variable) {
+                Token name = ((Variable)expression).name();
+                return new Assignment(name, value);
+            }
+
+            jKoda.error(equals, "Invalid assignment target.");
+        }
+
+        return expression;
+    }
+
+    private Expression or() {
+        return handleLogicalOperatorRule(this::and, OR);
+    }
+
+    private Expression and() {
+        return handleLogicalOperatorRule(this::equality, AND);
+    }
+
+    private Expression equality() {
+        return handleBinaryOperatorRule(this::comparison, BANG_EQUAL, EQUAL_EQUAL);
+    }
+
+    private Expression comparison() {
+        return handleBinaryOperatorRule(this::term, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL);
+    }
+
+    private Statement anIf() {
+        consume(LEFT_PAREN, "Expect '(' after 'if'.");
+        Expression condition = expression();
+        consume(RIGHT_PAREN, "Expect ')' after if condition.");
+
+        Statement thenBranch = statement();
+        Statement elseBranch = null;
+        if (match(ELSE)) {
+            elseBranch = statement();
+        }
+
+        return new If(condition, thenBranch, elseBranch);
     }
 
     private Expression term() {
@@ -164,6 +225,19 @@ public class Parser {
 
         return expression;
     }
+
+    private Expression handleLogicalOperatorRule(Supplier<Expression> rule, TokenType... types) {
+        var expression = rule.get();
+
+        while (match(types)) {
+            Token operator = previous();
+            Expression right = rule.get();
+            expression = new Logical(expression, operator, right);
+        }
+
+        return expression;
+    }
+
 
     private boolean match(TokenType... types) {
         for (TokenType type : types) {

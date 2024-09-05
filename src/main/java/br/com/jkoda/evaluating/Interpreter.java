@@ -4,6 +4,7 @@ import br.com.jkoda.jKoda;
 import br.com.jkoda.parsing.expressions.*;
 import br.com.jkoda.parsing.statement.*;
 import br.com.jkoda.scanning.Token;
+import br.com.jkoda.scanning.TokenType;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -44,6 +45,22 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor 
     @Override
     public void visit(Block block) {
         executeBlock(block.statements(), new Environment(environment));
+    }
+
+    @Override
+    public void visit(If anIf) {
+        if (isTruthy(evaluate(anIf.condition()))) {
+            execute(anIf.thenBranch());
+        } else if (anIf.elseBranch() != null) {
+            execute(anIf.elseBranch());
+        }
+    }
+
+    @Override
+    public void visit(While aWhile) {
+        while (isTruthy(evaluate(aWhile.condition()))) {
+            execute(aWhile.body());
+        }
     }
 
     @Override
@@ -98,6 +115,19 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor 
     @Override
     public Object visit(Assignment assignment) {
         return environment.assign(assignment.name(), evaluate(assignment.value()));
+    }
+
+    @Override
+    public Object visit(Logical logical) {
+        Object left = evaluate(logical.left());
+
+        if (logical.operator().type() == TokenType.OR) {
+            if (isTruthy(left)) return left;
+        } else {
+            if (!isTruthy(left)) return left;
+        }
+
+        return evaluate(logical.right());
     }
 
     private void executeBlock(List<Statement> statements, Environment environment) {
