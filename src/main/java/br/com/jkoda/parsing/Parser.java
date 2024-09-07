@@ -7,11 +7,11 @@ import br.com.jkoda.scanning.Token;
 import br.com.jkoda.scanning.TokenType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
 import static br.com.jkoda.scanning.TokenType.*;
-
 
 public class Parser {
     private final List<Token> tokens;
@@ -87,7 +87,17 @@ public class Parser {
         }
         consume(RIGHT_PAREN, "Expect ')' after for clauses.");
 
-        return statement();
+        Statement body = statement();
+
+        if (increment != null) body = new Block(Arrays.asList(body, new Formula(increment)));
+
+        if (condition == null) condition = new Literal(true);
+
+        body = new While(condition, body);
+
+        if (initializer != null) body = new Block(Arrays.asList(initializer, body));
+
+        return body;
     }
 
     private Statement aWhile() {

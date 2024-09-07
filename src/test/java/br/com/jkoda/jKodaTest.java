@@ -15,9 +15,9 @@ class jKodaTest {
     }
 
     @Test
-    void Should_LogErrorLineAndMessage_When_ReportError() {
-        String[] args = {"src/test/resources/fail_source_code.koda"};
+    void Should_PrintFibonacciSequence_When_ReadFibonacciFile() {
+        String[] args = {"src/test/resources/fibonacci.koda"};
 
-        assertThrows(RuntimeException.class, () -> jKoda.main(args));
+        assertDoesNotThrow(() -> jKoda.main(args));
     }
 }
