@@ -8,4 +8,5 @@ public interface ExpressionVisitor<R> {
     R visit(Variable variable);
     R visit(Assignment assignment);
     R visit(Logical logical);
+    R visit(Call call);
 }

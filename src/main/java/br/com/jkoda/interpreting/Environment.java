@@ -1,4 +1,4 @@
-package br.com.jkoda.evaluating;
+package br.com.jkoda.interpreting;
 
 import br.com.jkoda.scanning.Token;
 

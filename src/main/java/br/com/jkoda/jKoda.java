@@ -1,14 +1,12 @@
 package br.com.jkoda;
 
-import br.com.jkoda.evaluating.Interpreter;
-import br.com.jkoda.evaluating.RuntimeError;
+import br.com.jkoda.interpreting.Interpreter;
+import br.com.jkoda.interpreting.RuntimeError;
 import br.com.jkoda.parsing.statement.Statement;
 import br.com.jkoda.scanning.Scanner;
 import br.com.jkoda.scanning.Token;
 import br.com.jkoda.scanning.TokenType;
-import br.com.jkoda.parsing.AbstractSyntaxTreePrinter;
 import br.com.jkoda.parsing.Parser;
-import br.com.jkoda.parsing.expressions.Expression;
 
 import java.io.BufferedReader;
 import java.io.IOException;

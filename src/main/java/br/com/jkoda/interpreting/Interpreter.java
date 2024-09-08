@@ -1,16 +1,24 @@
-package br.com.jkoda.evaluating;
+package br.com.jkoda.interpreting;
 
+import br.com.jkoda.interpreting.functions.Callable;
+import br.com.jkoda.interpreting.functions.NativeClock;
 import br.com.jkoda.jKoda;
 import br.com.jkoda.parsing.expressions.*;
 import br.com.jkoda.parsing.statement.*;
 import br.com.jkoda.scanning.Token;
 import br.com.jkoda.scanning.TokenType;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
 public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor {
-    private Environment environment = new Environment();
+    private final Environment globals = new Environment();
+    private Environment environment = globals;
+
+    public Interpreter() {
+        globals.define("clock", new NativeClock());
+    }
 
     public void interpret(List<Statement> statements) {
         try {
@@ -128,6 +136,26 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor 
         }
 
         return evaluate(logical.right());
+    }
+
+    @Override
+    public Object visit(Call call) {
+        Object callee = evaluate(call.callee());
+
+        List<Object> arguments = new ArrayList<>();
+        for (Expression argument : call.arguments()) {
+            arguments.add(evaluate(argument));
+        }
+
+        if (!(callee instanceof Callable function)) {
+            throw new RuntimeError(call.token(), "Can only call functions and classes.");
+        }
+
+        if (arguments.size() != function.arity()) {
+            throw new RuntimeError(call.token(), "Expected " + function.arity() + " arguments but got " + arguments.size() + ".");
+        }
+
+        return function.call(this, arguments);
     }
 
     private void executeBlock(List<Statement> statements, Environment environment) {
