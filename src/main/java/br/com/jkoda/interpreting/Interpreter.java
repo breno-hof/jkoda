@@ -2,6 +2,7 @@ package br.com.jkoda.interpreting;
 
 import br.com.jkoda.interpreting.functions.Callable;
 import br.com.jkoda.interpreting.functions.NativeClock;
+import br.com.jkoda.interpreting.functions.RuntimeFunction;
 import br.com.jkoda.jKoda;
 import br.com.jkoda.parsing.expressions.*;
 import br.com.jkoda.parsing.statement.*;
@@ -28,6 +29,10 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor 
         } catch (RuntimeError error) {
             jKoda.runtimeError(error);
         }
+    }
+
+    public Environment getGlobals() {
+        return globals;
     }
 
     @Override
@@ -69,6 +74,12 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor 
         while (isTruthy(evaluate(aWhile.condition()))) {
             execute(aWhile.body());
         }
+    }
+
+    @Override
+    public void visit(Function function) {
+        RuntimeFunction runtimeFunction = new RuntimeFunction(function);
+        environment.define(function.name().lexeme(), runtimeFunction);
     }
 
     @Override
@@ -158,7 +169,7 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor 
         return function.call(this, arguments);
     }
 
-    private void executeBlock(List<Statement> statements, Environment environment) {
+    public void executeBlock(List<Statement> statements, Environment environment) {
         Environment previous = this.environment;
 
         try {

@@ -20,4 +20,11 @@ class jKodaTest {
 
         assertDoesNotThrow(() -> jKoda.main(args));
     }
+
+    @Test
+    void Should_PrintRecursiveCountFrom3To1_When_ReadRecursiveCountFile() {
+        String[] args = {"src/test/resources/recursive_count.koda"};
+
+        assertDoesNotThrow(() -> jKoda.main(args));
+    }
 }

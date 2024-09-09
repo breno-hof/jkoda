@@ -58,4 +58,9 @@ public class AbstractSyntaxTreePrinter implements ExpressionVisitor<String> {
     public String visit(Logical logical) {
         return "";
     }
+
+    @Override
+    public String visit(Call call) {
+        return "";
+    }
 }
