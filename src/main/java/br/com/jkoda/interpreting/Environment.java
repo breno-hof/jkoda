@@ -28,7 +28,7 @@ public class Environment {
 
         if (enclosing != null) return enclosing.get(name);
 
-        throw new RuntimeError(name,"Undefined variable '" + name.lexeme() + "'.");
+        throw new RuntimeError(name," Undefined variable '" + name.lexeme() + "'.");
     }
 
     public Object assign(Token name, Object value) {
@@ -39,6 +39,6 @@ public class Environment {
 
         if (enclosing != null) return enclosing.assign(name, value);
 
-        throw new RuntimeError(name,"Undefined variable '" + name.lexeme() + "'.");
+        throw new RuntimeError(name," Undefined variable '" + name.lexeme() + "'.");
     }
 }

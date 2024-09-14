@@ -31,10 +31,6 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor 
         }
     }
 
-    public Environment getGlobals() {
-        return globals;
-    }
-
     @Override
     public void visit(Print print) {
         System.out.println(stringify(evaluate(print.expression())));
@@ -78,7 +74,7 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor 
 
     @Override
     public void visit(Function function) {
-        RuntimeFunction runtimeFunction = new RuntimeFunction(function);
+        RuntimeFunction runtimeFunction = new RuntimeFunction(function, environment);
         environment.define(function.name().lexeme(), runtimeFunction);
     }
 

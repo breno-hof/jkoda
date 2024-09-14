@@ -33,4 +33,11 @@ class jKodaTest {
 
         assertDoesNotThrow(() -> jKoda.main(args));
     }
+
+    @Test
+    void Should_PrintCounting_When_ReadMakeCounterFile() {
+        String[] args = {"src/test/resources/make_counter.koda"};
+
+        assertDoesNotThrow(() -> jKoda.main(args));
+    }
 }

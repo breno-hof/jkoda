@@ -9,14 +9,16 @@ import java.util.List;
 
 public class RuntimeFunction implements Callable {
     private final Function declaration;
+    private final Environment closure;
 
-    public RuntimeFunction(Function declaration) {
+    public RuntimeFunction(Function declaration, Environment closure) {
         this.declaration = declaration;
+        this.closure = closure;
     }
 
     @Override
     public Object call(Interpreter interpreter, List<Object> arguments) {
-        Environment environment = new Environment(interpreter.getGlobals());
+        Environment environment = new Environment(closure);
         for (int i = 0; i < declaration.params().size(); i++) {
             environment.define(declaration.params().get(i).lexeme(), arguments.get(i));
         }
