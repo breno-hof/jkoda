@@ -2,6 +2,7 @@ package br.com.jkoda.interpreting.functions;
 
 import br.com.jkoda.interpreting.Environment;
 import br.com.jkoda.interpreting.Interpreter;
+import br.com.jkoda.interpreting.RuntimeReturn;
 import br.com.jkoda.parsing.statement.Function;
 
 import java.util.List;
@@ -20,7 +21,11 @@ public class RuntimeFunction implements Callable {
             environment.define(declaration.params().get(i).lexeme(), arguments.get(i));
         }
 
-        interpreter.executeBlock(declaration.body(), environment);
+        try {
+            interpreter.executeBlock(declaration.body(), environment);
+        } catch (RuntimeReturn runtimeReturn) {
+            return runtimeReturn.getValue();
+        }
         return null;
     }
 

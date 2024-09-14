@@ -83,6 +83,14 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor 
     }
 
     @Override
+    public void visit(Return aReturn) {
+        Object value = null;
+        if (aReturn.value() != null) value = evaluate(aReturn.value());
+
+        throw new RuntimeReturn(value);
+    }
+
+    @Override
     public Object visit(Binary binary) {
         Object right = evaluate(binary.right());
         Object left = evaluate(binary.left());

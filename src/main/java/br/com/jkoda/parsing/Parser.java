@@ -79,10 +79,22 @@ public class Parser {
         if (match(FOR)) return aFor();
         if (match(IF)) return anIf();
         if (match(PRINT)) return print();
+        if (match(RETURN)) return aReturn();
         if (match(WHILE)) return aWhile();
         if (match(LEFT_BRACE)) return new Block(block());
 
         return formula();
+    }
+
+    private Statement aReturn() {
+        Token keyword = previous();
+        Expression value = null;
+        if (!check(SEMICOLON)) {
+            value = expression();
+        }
+
+        consume(SEMICOLON, "Expect ';' after return value.");
+        return new Return(keyword, value);
     }
 
     private Statement aFor() {

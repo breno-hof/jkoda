@@ -3,7 +3,6 @@ package br.com.jkoda;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class jKodaTest {
 
@@ -24,6 +23,13 @@ class jKodaTest {
     @Test
     void Should_PrintRecursiveCountFrom3To1_When_ReadRecursiveCountFile() {
         String[] args = {"src/test/resources/recursive_count.koda"};
+
+        assertDoesNotThrow(() -> jKoda.main(args));
+    }
+
+    @Test
+    void Should_PrintRecursiveFibonacciSequence_When_ReadRecursiveFibonacciFile() {
+        String[] args = {"src/test/resources/recursive_fibonacci.koda"};
 
         assertDoesNotThrow(() -> jKoda.main(args));
     }

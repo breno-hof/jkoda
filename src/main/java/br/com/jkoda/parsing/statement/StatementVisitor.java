@@ -8,4 +8,6 @@ public interface StatementVisitor {
     void visit(If anIf);
     void visit(While aWhile);
     void visit(Function function);
+
+    void visit(Return aReturn);
 }
