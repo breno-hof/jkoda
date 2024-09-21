@@ -3,7 +3,7 @@ package br.com.jkoda.interpreting;
 import br.com.jkoda.interpreting.functions.Callable;
 import br.com.jkoda.interpreting.functions.NativeClock;
 import br.com.jkoda.interpreting.functions.RuntimeFunction;
-import br.com.jkoda.jKoda;
+import br.com.jkoda.Koda;
 import br.com.jkoda.parsing.expressions.*;
 import br.com.jkoda.parsing.statement.*;
 import br.com.jkoda.scanning.Token;
@@ -27,7 +27,7 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor 
                 execute(statement);
             }
         } catch (RuntimeError error) {
-            jKoda.runtimeError(error);
+            Koda.runtimeError(error);
         }
     }
 

@@ -1,6 +1,6 @@
 package br.com.jkoda.parsing;
 
-import br.com.jkoda.jKoda;
+import br.com.jkoda.Koda;
 import br.com.jkoda.parsing.expressions.*;
 import br.com.jkoda.parsing.statement.*;
 import br.com.jkoda.scanning.Token;
@@ -182,7 +182,7 @@ public class Parser {
                 return new Assignment(name, value);
             }
 
-            jKoda.error(equals, "Invalid assignment target.");
+            Koda.error(equals, "Invalid assignment target.");
         }
 
         return expression;
@@ -331,7 +331,7 @@ public class Parser {
     }
 
     private ParseError error(Token token, String message) {
-        jKoda.error(token, message);
+        Koda.error(token, message);
         return new ParseError();
     }
 

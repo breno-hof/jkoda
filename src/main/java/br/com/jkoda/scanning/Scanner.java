@@ -1,6 +1,6 @@
 package br.com.jkoda.scanning;
 
-import br.com.jkoda.jKoda;
+import br.com.jkoda.Koda;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,7 +84,7 @@ public class Scanner {
                     break;
                 }
 
-                jKoda.error(line, "Unexpected character.");
+                Koda.error(line, "Unexpected character.");
             }
         }
     }
@@ -138,7 +138,7 @@ public class Scanner {
         }
 
         if (isAtEnd()) {
-            jKoda.error(line, "Unterminated string.");
+            Koda.error(line, "Unterminated string.");
             return;
         }
 
